@@ -1,6 +1,6 @@
 import User from "../models/user.model";
 import sendResponse from "../utils/sendResponse.js";
-import options from "../utils/options.js";
+import options from "../utils/option.js";
 import bcrypt from "bcrypt"
 import generateAccessAndRefreshToken from "../utils/generateAccessAndRefreshToken.js"
 import { EMAIL_PATTERN, PASSWORD_PATTERN } from "../utils/pattern.js";
@@ -16,7 +16,7 @@ const signup = async (req, res) => {
             return sendResponse(res, 400, "email should be like these : Abdullah@1gmail.com or abkhan@2gmail.co", false)
         }
         if (!PASSWORD_PATTERN.test(password)) {
-            return sendResponse(res, 400, "email should be like these : Abdullah@1 or ad@qweA125", false)
+            return sendResponse(res, 400, "Password should be like: Abdullah@1 or ad@qweA125", false)
         }
 
         const existingUser = await User.findOne({ email });
