@@ -1,8 +1,10 @@
+import ms from "ms";
+
 const options = (time) => {
     return {
         httpOnly: true,
         secure: true,
-        maxAge: time * 60 * 1000
+        maxAge: ms(time)
     }
 }
 

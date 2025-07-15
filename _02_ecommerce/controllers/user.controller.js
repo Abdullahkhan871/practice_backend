@@ -1,14 +1,14 @@
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 import sendResponse from "../utils/sendResponse.js";
 import options from "../utils/option.js";
 import bcrypt from "bcrypt"
 import generateAccessAndRefreshToken from "../utils/generateAccessAndRefreshToken.js"
 import { EMAIL_PATTERN, PASSWORD_PATTERN } from "../utils/pattern.js";
+import jwt from "jsonwebtoken";
 
 const signup = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-
         if (!name?.trim() || !email?.trim() || !password?.trim()) {
             return sendResponse(res, 400, "Bad request", false)
         }
@@ -44,7 +44,6 @@ const signup = async (req, res) => {
         return sendResponse(res, 500, "Server error", false)
     }
 }
-
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -72,6 +71,7 @@ const login = async (req, res) => {
         await user.updateOne({ refreshToken });
 
         res.cookie("accessToken", accessToken, options(process.env.ACCESS_TOKEN_EXPIRE))
+        res.cookie("refreshToken", refreshToken, options(process.env.REFRESH_TOKEN_EXPIRE))
         return sendResponse(res, 200, "Login successful", true, {
             user: {
                 _id: user._id,
@@ -85,11 +85,34 @@ const login = async (req, res) => {
 }
 const logout = async (req, res) => {
     try {
-
+        const { accessToken } = req?.cookies;
+        if (!accessToken) {
+            return sendResponse(res, 401, "Unauthorized", false);
+        }
+        const verifyAcceseToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+        await User.updateOne({ email: verifyAcceseToken.email }, { refreshToken: "" });
+        res.clearCookie("accessToken",
+            {
+                httpOnly: true,
+                secure: true,
+                sameSite: "Strict"
+            });
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+        });
+        return sendResponse(res, 200, "User Logout", true);
     } catch (error) {
-        return sendResponse(res, 500, "Server error", false)
+        return sendResponse(res, 500, `error: ${error.message}`, false)
     }
 }
 
-
-export { login, logout, signup };
+const refreshToken = async (req, res) => {
+    try {
+        const accessToken = 
+    } catch (error) {
+        return sendResponse(res, `error : ${error.message}`, false);
+    }
+}
+export { login, logout, signup, refreshToken };
