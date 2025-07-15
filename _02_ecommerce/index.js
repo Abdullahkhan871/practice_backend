@@ -3,13 +3,19 @@ import db from "./config/db.js"
 const app = e();
 dotenv.config()
 
-import dotenv from "dotenv"
+import dotenv from "dotenv";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRouter.js";
 
 
 
 db();
+
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 
 app.use(e.json())
 app.use(cookieParser());
