@@ -110,9 +110,26 @@ const logout = async (req, res) => {
 
 const refreshToken = async (req, res) => {
     try {
-        const accessToken = 
+        const { refreshToken } = req?.cookies;
+        if (!refreshToken?.trim()) {
+            return sendResponse(res, 401, "Unauthorized", false);
+        }
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        const user = await User.findOne({ email: decoded.email });
+
+        if (!user || user.refreshToken !== refreshToken) {
+            return sendResponse(res, 403, "refresh token Invalid", false);
+        };
+
+        const { accessToken, refreshToken: newRefreshToken } = generateAccessAndRefreshToken(decoded.email);
+        await user.updateOne({ refreshToken: newRefreshToken });
+
+        res.cookie("accessToken", accessToken, options(process.env.ACCESS_TOKEN_EXPIRE));
+        res.cookie("refreshToken", newRefreshToken, options(process.env.REFRESH_TOKEN_EXPIRE));
+        return sendResponse(res, 200, "tokens got refresh", true)
     } catch (error) {
-        return sendResponse(res, `error : ${error.message}`, false);
+        return sendResponse(res, 500, `error : ${error.message}`, false);
     }
 }
 export { login, logout, signup, refreshToken };
