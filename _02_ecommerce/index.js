@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRouter.js";
 import productRouter from "./routes/productsRouter.js";
 import cartRouter from "./routes/cartRouter.js";
+import { contactRouter } from "./routes/contactRouter.js";
 
 
 
@@ -25,8 +26,7 @@ app.use(cookieParser());
 app.use("/auth", authRouter);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter);
-
-
+app.use("/contact", contactRouter);
 
 app.get("/", (req, res) => {
     res.send("working");

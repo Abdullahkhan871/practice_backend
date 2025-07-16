@@ -23,7 +23,9 @@ const putUserCart = (req, res) => {
 }
 const deleteUserCartProduct = (req, res) => {
     try {
+        const { userId, productId } = req.params;
 
+        console.log("check", userId, productId)
     } catch (error) {
         return sendResponse(res, 500, `error: ${error.message}`, false)
     }
