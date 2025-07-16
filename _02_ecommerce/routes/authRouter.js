@@ -6,8 +6,8 @@ const authRouter = e.Router();
 
 authRouter.post("/signup", signup);
 authRouter.post("/login", login);
-authRouter.post("/logout", logout);
-authRouter.post("/refresh-token", refreshToken);
+authRouter.post("/logout", isLogged, logout);
+authRouter.post("/refresh-token", isLogged, refreshToken);
 
 
 export default authRouter;

@@ -8,6 +8,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRouter.js";
 import productRouter from "./routes/productsRouter.js";
+import cartRouter from "./routes/cartRouter.js";
 
 
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/products", productRouter);
+app.use("/cart", cartRouter);
 
 
 
