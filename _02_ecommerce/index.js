@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRouter.js";
+import productRouter from "./routes/productsRouter.js";
 
 
 
@@ -17,10 +18,11 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(e.json())
+app.use(e.json());
 app.use(cookieParser());
 
-app.use("/auth", authRouter)
+app.use("/auth", authRouter);
+app.use("/products", productRouter);
 
 
 
