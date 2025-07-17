@@ -33,26 +33,22 @@ const getCategory = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        const { name, price, category, subcategory, description, stock, } = req.body
+        const { name, price, category, subcategory, description, stock, } = req.body;
         const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
         if (!allowedMimeTypes.includes(req.file.mimetype)) {
-            return res.status(400).json({
-                success: false,
-                message: "Only image files are allowed"
-            });
+            return sendResponse(res, 400, "Only image files are allowed", false)
+        };
+
+        if (!name?.trim() || !price || category?.trim() || !subcategory.length > 0, !description?.trim() || !stock) {
+            return sendResponse(res, 400, "Need All value", false)
         }
 
         const file = dataUri(req.file).content;
-        console.log("Original Name:", req.file.originalname);
-        console.log("Mime Type:", req.file.mimetype);
-        console.log("Data URI Starts:", dataUri(req.file).content.slice(0, 30));
 
         const result = await uploader.upload(file, {
             folder: "e_commerce"
         });
-        console.log("Result Public ID:", result.public_id);
-
-        console.log("Public ID Returned:", result.public_id);
 
         const newProduct = await Product.create({
             name,
@@ -63,14 +59,9 @@ const addProduct = async (req, res) => {
             stock: stock || 1,
             image: result.url
         });
-
-        console.log(result.public_id)
-
-        res.status(201).json({
-            success: true,
-            message: "Product added successfully",
-            product: newProduct
-        });
+        sendResponse(res, 201, "Product added successfully", {
+            products: newProduct,
+        })
     } catch (err) {
         return sendResponse(res, 500, `error: ${err.message}`, false)
     }
