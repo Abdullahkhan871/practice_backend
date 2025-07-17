@@ -1,7 +1,7 @@
 import sendResponse from "../utils/sendResponse.js"
 import Product from "../models/product.model.js"
 import { dataUri } from "../middleware/multer.js";
-import { uploader } from "../config/cloudinaryConfig.js";
+import cloudinary from "cloudinary"
 
 const getProducts = async (req, res) => {
     try {
@@ -45,9 +45,11 @@ const addProduct = async (req, res) => {
         }
 
         const file = dataUri(req.file).content;
-        const result = await uploader.upload(file, {
+        const result = await cloudinary.v2.uploader.upload(file, {
             folder: "e_commerce"
         });
+
+        console.log(result)
 
         const newProduct = await Product.create({
             name,
