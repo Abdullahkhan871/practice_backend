@@ -10,10 +10,12 @@ import authRouter from "./routes/authRouter.js";
 import productRouter from "./routes/productsRouter.js";
 import cartRouter from "./routes/cartRouter.js";
 import { contactRouter } from "./routes/contactRouter.js";
+import { cloudinaryConfig } from "./config/cloudinaryConfig.js";
 
 
 
 db();
+cloudinaryConfig();
 
 app.use(cors({
     origin: true,
@@ -21,6 +23,7 @@ app.use(cors({
 }));
 
 app.use(e.json());
+app.use(e.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/auth", authRouter);

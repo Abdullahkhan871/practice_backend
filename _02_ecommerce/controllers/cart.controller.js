@@ -2,7 +2,8 @@ import sendResponse from "../utils/sendResponse.js"
 
 const getUserCart = (req, res) => {
     try {
-
+        const { user } = req;
+        console.log(user);
     } catch (error) {
         return sendResponse(res, 500, `error: ${error.message}`, false)
     }
