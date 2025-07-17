@@ -45,7 +45,6 @@ const addProduct = async (req, res) => {
         }
 
         const file = dataUri(req.file).content;
-
         const result = await uploader.upload(file, {
             folder: "e_commerce"
         });
