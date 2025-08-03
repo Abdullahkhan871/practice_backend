@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Socket.IO Client</title>
+  </head>
+  <body>
+    <h1>Socket.IO Client Connected</h1>
+
+    <form id="form">
+      <input type="text" id="input" placeholder="Type a message" />
+      <button type="submit">Send</button>
+    </form>
+
+    <ul id="messages"></ul>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+      const form = document.getElementById("form");
+      const msg = document.getElementById("input");
+      const msgContainer = document.getElementById("messages");
+      // send msg
+
+      form.addEventListener("submit", sendMsg);
+
+      function sendMsg(e) {
+        e.preventDefault();
+        if (msg.value.trim() != "") {
+          socket.emit("msg", msg.value);
+        }
+      }
+
+      socket.on("msg", (msg) => {
+        const newMsg = document.createElement("li");
+        if (msg.trim()) {
+          newMsg.textContent = msg;
+          console.log(msgContainer);
+          msgContainer.appendChild(newMsg);
+        }
+      });
+    </script>
+  </body>
+</html>
